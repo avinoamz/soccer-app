@@ -9,24 +9,19 @@ var router = require('./routes')(app);
 app.use(logger('dev'));
 app.use(express.json());
 
-fs.createReadStream('result_played.csv')
+readFile('result_played.csv', 'played');
+readFile('result_upcoming.csv', 'upcoming');
+
+function readFile(fileName, status){
+  fs.createReadStream(fileName)
   .pipe(csv())
   .on('data', (row) => {
-    db.addGameInfo(row, 'played');
+    db.addGameInfo(row, status);
   })
   .on('end', () => {
-    console.log('CSV file successfully processed result_played');
+    console.log(`CSV file successfully processed ${fileName}`);
   });
-
-fs.createReadStream('result_upcoming.csv')
-  .pipe(csv())
-  .on('data', (row) => {
-    db.addGameInfo(row, 'upcoming');
-  })
-  .on('end', () => {
-    console.log('CSV file successfully processed result_upcoming');
-  });
-
+}
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

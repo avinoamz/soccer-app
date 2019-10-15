@@ -8,7 +8,6 @@ module.exports = function (app) {
     // localhost:3000/teams/Arsenal
     app.get('/teams/:team', function (req, res, next) {
         const myQuery = new query(req.params.team, 'all');
-        console.log('fix query for all');
         res.send(db.getResultFromDatabase(myQuery));
     });
 
